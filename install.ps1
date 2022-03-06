@@ -4,7 +4,6 @@ Try {
     if ($THEME -eq "") {
         $THEME = "my-clean-detailed"
     }
-    $THEME = ".$THEME"
 
     Install-Module oh-my-posh -Scope CurrentUser 
 
