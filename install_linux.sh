@@ -5,22 +5,21 @@
 # ==============================================================================
 
 getVersion() {
-	$result=`curl --silent https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest`
+	result=`curl --silent https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest`
 	version=${result##*/tag/}
-    version=${version%%'>"'*}
+    version=${version%%'">'*}
     
-	return $version
+	echo $version
 }
-
 
 #Define the theme to install, if no theme given then use the custom theme in .posh-themes
 if [ -z $1 ]; then
 	theme="my-clean-detailed"
 else
 	if [ ! -z $2 ]; then 
-		version=getVersion
-		echo $version
+		version=$(getVersion)
 		themeExist=`curl -o /dev/null --silent --head --write-out '%{http_code}\n' https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/$version/themes/$1.omp.json`
+
 		if [ $themeExist -eq 200 ]; then
 			theme=$1
 		else
@@ -30,9 +29,10 @@ else
 	else
 		if [ -f ~/my-posh-themes/.posh-themes/$1.omp.json ]; then
 			theme=$1
-	else
-		echo "Theme $1 not found"
-		exit 1
+		else
+			echo "Theme $1 not found"
+			exit 1
+		fi
 	fi
 fi
 
@@ -84,7 +84,7 @@ while [[ $shell == "" ]]; do
 			shell="zsh"
 			;;
 		*)
-	clear
+			clear
 			;;
 	esac
 done
