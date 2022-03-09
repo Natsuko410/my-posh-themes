@@ -15,7 +15,7 @@ getVersion() {
 version=$(getVersion)
 
 theme="my-clean-detailed"
-
+pwd=$(pwd)
 #Define the theme to install, if no theme given then use the custom theme in .posh-themes
 if [ ! -z $1 ]; then
 	if [ ! -z $2 ]; then
@@ -28,7 +28,7 @@ if [ ! -z $1 ]; then
 			exit 1
 		fi
 	else
-		if [ -f ~/my-posh-themes/.posh-themes/$1.omp.json ]; then
+		if [ -f $pwd/.posh-themes/$1.omp.json ]; then
 			theme=$1
 		else
 			echo "Theme $1 not found"
@@ -96,23 +96,21 @@ while [[ $shell == "" ]]; do
 	esac
 done
 
-#! TEST TO DELETE !!!!!!!!!!!!!!
-shell="test"
 shellrc=$shell"rc"
 result=$(grep -i "oh-my-posh --init --shell" ~/.$shellrc)
 
 #if not install in the .$shellrc file
 if [ -z $result ] 2>/dev/null; then
 	if [ -z $2 ]; then
-		path="$theme.omp.json"
-		echo "TEST"
-		echo $path
+		path="$pwd/.posh-themes/$theme.omp.json"
 		echo "initializing oh-my-posh for $shell with themes $theme"
-		echo """eval "$(oh-my-posh --init --shell $shell --config $path)"""" >>~/.$shellrc
+		begin='eval "$('
+		end=')"'
+		content="$begin oh-my-posh --init --shell $shell --config $path $end"
+		echo $content >>~/.$shellrc
 	else
 		echo "initializing oh-my-posh for $shell with the official themes $theme"
-		echo """eval "$(oh-my-posh --init --shell $shell --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/$version/themes/$theme.omp.json)"""" >>~/.$shellrc
-
+		echo "eval \"$(oh-my-posh --init --shell $shell --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/$version/themes/$theme.omp.json)\"" >>~/.$shellrc
 	fi
 
 	echo "You can now reload / open a new terminal"
